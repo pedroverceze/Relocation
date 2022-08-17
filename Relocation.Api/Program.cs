@@ -1,32 +1,40 @@
 using Microsoft.EntityFrameworkCore;
 using Relocation.Infrastructure.Data;
+using MediatR;
+using Relocation.Application.CommandHandler.CreateClient;
+using System.Reflection;
+using Relocation.Application.CommandHandler.CreateClient.Input;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddDbContext<Context>(o =>
+{
+    builder.Services.AddDbContext<Context>(o =>
                 o.UseSqlServer(builder.Configuration.GetConnectionString("relocationDb")));
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+    builder.Services.AddMediatR(typeof(CreateClientCommandRequest));
 
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    builder.Services.AddControllers();
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
 }
 
-app.UseHttpsRedirection();
+var app = builder.Build();
+{
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
 
-app.UseAuthorization();
+    app.UseHttpsRedirection();
 
-app.MapControllers();
+    app.UseAuthorization();
 
-app.Run();
+    app.MapControllers();
+
+    app.Run();
+}
+
+
 
 
 
